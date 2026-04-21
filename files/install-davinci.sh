@@ -105,6 +105,7 @@ revision=1
 short_desc="Professional video editing, color, effects and audio post-processing"
 maintainer="Local Build <VER@localhost>"
 license="custom:Proprietary"
+homepage="https://www.blackmagicdesign.com/products/davinciresolve"
 depends="libGLU glib alsa-lib ocl-icd fontconfig freetype nspr xcb-util-keysyms xcb-util-image xcb-util-renderutil xcb-util-wm dbus udev python3 bash"
 makedepends="unzip"
 restricted=yes
