@@ -1,0 +1,60 @@
+name: Build Installer Package
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'template'
+      - 'files/install-davinci.sh'
+      - '.github/workflows/build-installer.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install static XBPS tools (Ubuntu to Void Bridge)
+        run: |
+          wget -q https://repo-default.voidlinux.org/static/xbps-static-latest.x86_64-musl.tar.xz
+          sudo tar xf xbps-static-latest.x86_64-musl.tar.xz -C /
+          xbps-query -V
+
+      - name: Patch Ubuntu DNS for musl resolver
+        run: |
+          sudo rm -f /etc/resolv.conf
+          echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+
+      - name: Disable AppArmor User Namespace Restriction (Ubuntu 24.04 fix)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Clone void-packages
+        run: git clone https://github.com/void-linux/void-packages.git --depth 1
+
+      - name: Prepare void-packages environment
+        run: |
+          cd void-packages
+          ./xbps-src binary-bootstrap
+
+      - name: Inject template and files
+        run: |
+          mkdir -p void-packages/srcpkgs/davinci-resolve-installer/files
+          cp template void-packages/srcpkgs/davinci-resolve-installer/
+          cp files/install-davinci.sh void-packages/srcpkgs/davinci-resolve-installer/files/
+
+      - name: Build package
+        run: |
+          cd void-packages
+          ./xbps-src pkg davinci-resolve-installer
+
+      - name: Publish to Latest Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: 'Latest Installer Build'
+          make_latest: true
+          files: void-packages/hostdir/binpkgs/davinci-resolve-installer*.xbps
