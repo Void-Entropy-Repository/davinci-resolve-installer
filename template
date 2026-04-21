@@ -1,0 +1,11 @@
+pkgname=davinci-resolve-installer
+version=20.3.2
+revision=1
+short_desc="Automated installer and packager for DaVinci Resolve Studio"
+maintainer="Local Build <VER@localhost>"
+license="MIT"
+depends="bash curl unzip git jq"
+
+do_install() {
+    vbin ${FILESDIR}/install-davinci.sh install-davinci
+}
