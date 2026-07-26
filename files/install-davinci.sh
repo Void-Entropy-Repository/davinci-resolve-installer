@@ -4,7 +4,7 @@ set -euo pipefail # Strict mode: crash on error or unbound variables
 BUILD_DIR="/var/tmp/VER-davinci-build"
 
 # These variables are automatically injected by the Nix Scraper CI/CD pipeline
-VERSION="21.0.1"
+VERSION="21.0.3"
 REFERID="263d62f31cbb49e0868005059abcb0c9"
 
 ZIP_NAME="DaVinci_Resolve_Studio_${VERSION}_Linux.zip"
