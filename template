@@ -1,5 +1,5 @@
 pkgname=davinci-resolve-installer
-version=21.0.4
+version=21.1
 revision=1
 short_desc="Automated installer and packager for DaVinci Resolve Studio"
 maintainer="Local Build <VER@localhost>"
